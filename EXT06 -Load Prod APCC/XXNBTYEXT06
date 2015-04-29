@@ -1,0 +1,57 @@
+#!/bin/bash
+
+
+####################################################################################################################
+#																													
+#	Script Name: XXNBTYEXT06																		
+#	Author's Name: Erwin Ramos																						
+#	Date written: 28-Feb-2015																						
+#	RICEFW Object: EXT06																								
+#	Description: Unix script for EXT06 - APCC Load History.																	
+#	Program Style: 																									
+#																													
+#	Maintenance History:																							
+#																													
+#	Date			Issue#		Name			Remarks																
+#	-----------		------		-----------		------------------------------------------------					
+#	28-Feb-2015				 	Erwin Ramos		Initial Development													
+#	10-Mar-2015					Erwin Ramos		Added the script for removing .dis and .bad in the dataupload directory																											
+#																													
+####################################################################################################################
+
+
+## SET VARIABLE
+incoming="/home/nbtydata/incoming";
+dataUpload="/home/nbtydata/dataupload";
+LoadHist="MSC_ST_DEMANTRA_ODS_F";
+bin=$XXNBTY_TOP;
+fileArch=$XXNBTY_TOP/data/in/arch;
+temp=$XXNBTY_TOP/data/tmp;
+v_date=`date "+%Y-%m-%d_%H:%M"`;
+
+# Removing .dis and .bad in the dataupload directory
+
+cd $dataUpload
+cat MSC_ST_DEMANTRA_ODS_F.dis > MSC_ST_DEMANTRA_ODS_F.dis_$v_date 
+cat MSC_ST_DEMANTRA_ODS_F.bad > MSC_ST_DEMANTRA_ODS_F.bad_$v_date 
+
+mv MSC_ST_DEMANTRA_ODS_F.dis* $fileArch
+mv MSC_ST_DEMANTRA_ODS_F.bad* $fileArch
+
+cd $incoming
+
+chmod 777 $LoadHist
+
+# Archive flat file
+cat $LoadHist* > MSC_ST_DEMANTRA_ODS_F_.csv_$v_date
+
+mv MSC_ST_DEMANTRA_ODS_F_.csv_* $fileArch
+
+# move flat file into dataupload. 
+
+mv $LoadHist*  $dataUpload
+
+
+
+
+
